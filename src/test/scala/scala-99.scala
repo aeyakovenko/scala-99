@@ -3,8 +3,6 @@ import org.scalacheck.Prop.forAll
 import scala99._
 
 object Scala99Test extends Properties("scala99") {
-
-  def last[A](ls: List[A]): A = ls.last
   property("islast") = forAll { (a: List[Int]) =>
     a match {
       case Nil =>
@@ -15,10 +13,9 @@ object Scala99Test extends Properties("scala99") {
          case ex: NoSuchElementException => true
          case ex: Throwable => false
        }
-      case _ => Scala99.last(a) == last(a)
+      case _ => Scala99.last(a) == a.last
     }
   }
-  def penultimate[A](ls: List[A]): A = ls.apply(ls.length - 2)
   property("penultimate") = forAll { (a: List[Int]) =>
     (a.length <= 1) match {
       case true =>
@@ -29,7 +26,7 @@ object Scala99Test extends Properties("scala99") {
          case ex: NoSuchElementException => true
          case ex: Throwable => false
        }
-      case _ => Scala99.penultimate(a) == penultimate(a)
+      case _ => Scala99.penultimate(a) == a.apply(a.length - 2)
     }
   }
   property("nth") = forAll { (n : Int, a: List[Int]) =>
