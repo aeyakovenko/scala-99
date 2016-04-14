@@ -34,7 +34,7 @@ package scala99 {
       case Nil => Nil
       case ls => { 
         val st = ls.takeWhile(_ == ls.head)
-        val rest = ls.dropWhile( _ == ls.head)
+        val rest = ls.drop(st.length)
         st :: group(rest)
       }
     }
