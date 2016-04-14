@@ -30,6 +30,7 @@ package scala99 {
        case as:List[_] => flatten(as)
        case a => List(a)
     }
+
     def group[A](ls: List[A]): List[List[A]] = ls match {
       case Nil => Nil
       case ls => { 
@@ -38,6 +39,7 @@ package scala99 {
         st :: group(rest)
       }
     }
+
     def compress[A](ls: List[A]): List[A] = group(ls).map(_.head)
   }
 }
