@@ -57,5 +57,8 @@ object Scala99Test extends Properties("scala99") {
     val deep: List[Any] = a.foldLeft(List[Any]())((z,a) => List(z) :: List(a))
     Scala99.flatten(deep) == a
   }
-
+  property("compress") = forAll { a: List[Int] => 
+    val dups = a.zip(a).map(_.productIterator.toList).flatten
+    Scala99.compress(dups) == Scala99.compress(a)
+  }
 }

@@ -30,5 +30,14 @@ package scala99 {
        case as:List[_] => flatten(as)
        case a => List(a)
     }
+    def group[A](ls: List[A]): List[List[A]] = ls match {
+      case Nil => Nil
+      case ls => { 
+        val st = ls.takeWhile(_ == ls.head)
+        val rest = ls.dropWhile( _ == ls.head)
+        st :: group(rest)
+      }
+    }
+    def compress[A](ls: List[A]): List[A] = group(ls).map(_.head)
   }
 }
