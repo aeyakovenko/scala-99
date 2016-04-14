@@ -13,6 +13,7 @@ object Scala99Test extends Properties("scala99") {
       case _ => false
     }
   }
+
   property("penultimate") = forAll { (a: List[Int]) =>
     val x = Try(Scala99.penultimate(a))
     val y = Try(a.apply(a.length - 2))
@@ -25,6 +26,7 @@ object Scala99Test extends Properties("scala99") {
     }
 
   }
+
   property("nth") = forAll { (n : Int, a: List[Int]) =>
     val x = Try(Scala99.nth(n, a))
     val y = Try(a.apply(n))
@@ -36,4 +38,24 @@ object Scala99Test extends Properties("scala99") {
       case _ => false
     }
   }
+
+  property("length") = forAll { (a: List[Int]) => Scala99.length(a) == a.length }
+
+  property("reverse") = forAll { (a: List[Int]) => Scala99.reverse(a) == a.reverse }
+
+  property("isPalindrome") = forAll { (a: List[Int]) =>
+    Scala99.isPalindrome(a ++ a.reverse)
+  }
+
+  property("isPalindrome2") = forAll { (a: List[Int]) => a match {
+      case Nil => true
+      case a:List[Int] => Scala99.isPalindrome(a ++ a.reverse.tail)
+    }
+  }
+
+  property("flatten") = forAll { a: List[Int] => 
+    val deep: List[Any] = a.foldLeft(List[Any]())((z,a) => List(z) :: List(a))
+    Scala99.flatten(deep) == a
+  }
+
 }
