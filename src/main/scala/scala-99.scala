@@ -33,13 +33,23 @@ package scala99 {
 
     def group[A](ls: List[A]): List[List[A]] = ls match {
       case Nil => Nil
-      case ls => { 
+      case ls => {
         val st = ls.takeWhile(_ == ls.head)
         val rest = ls.drop(st.length)
         st :: group(rest)
       }
     }
-
     def compress[A](ls: List[A]): List[A] = group(ls).map(_.head)
+    def rle[A](ls: List[A]): List[(Int,A)] = group(ls).map({ ls => (ls.length, ls.head)})
+    def unrle[A](ls: List[(Int,A)]): List[A] = {
+      val f = (a: Int, b: A) => List.fill(a)(b)
+      ls.map(f.tupled).flatten
+    }
+    def rleFast[A](ls: List[A]): List[(Int,A)] = ls.foldLeft(List[(Int,A)]()) { (z,h) => 
+      z match {
+        case Nil => (1, h) :: Nil
+        case ((c,v)::rest) => if(h == v) (c+1,v)::rest else (1,h)::z
+      }
+    }.reverse
   }
 }
