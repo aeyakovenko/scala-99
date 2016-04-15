@@ -67,7 +67,20 @@ object Scala99Test extends Properties("scala99") {
   property("rle") = forAll { a: List[Int] => 
     Scala99.unrle(Scala99.rle(a)) == a
   }
-  property("rleFast") = forAll { a: List[Int] => 
-    Scala99.unrle(Scala99.rleFast(a)) == a
+  property("rle2") = forAll { a: List[Int] => 
+    val c = Scala99.compress(a)
+    Scala99.rle(c) == List.fill(c.length)(1).zip(c)
+  }
+  property("rleDirect") = forAll { a: List[Int] => 
+    Scala99.unrle(Scala99.rleDirect(a)) == a
+  }
+  property("duplicate") = forAll { a: List[Int] => 
+    val dups = a.zip(a).map(_.productIterator.toList).flatten
+    Scala99.duplicate(a) == dups
+  }
+  property("duplicateN") = forAll { (n: Int, a: List[Int]) => 
+    val t = Math.min(5, Math.max(n, 1))
+    val b = Scala99.compress(a)
+    Scala99.rle(Scala99.duplicateN(t, b)) == List.fill(b.length)(t).zip(b) 
   }
 }

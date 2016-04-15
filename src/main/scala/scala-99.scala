@@ -45,11 +45,18 @@ package scala99 {
       val f = (a: Int, b: A) => List.fill(a)(b)
       ls.map(f.tupled).flatten
     }
-    def rleFast[A](ls: List[A]): List[(Int,A)] = ls.foldLeft(List[(Int,A)]()) { (z,h) => 
-      z match {
-        case Nil => (1, h) :: Nil
-        case ((c,v)::rest) => if(h == v) (c+1,v)::rest else (1,h)::z
+    def rleDirect[A](ls: List[A]): List[(Int,A)] = ls match {
+      case Nil => Nil
+      case ls => {
+        val st = ls.takeWhile(_ == ls.head)
+        val rest = ls.drop(st.length)
+        (st.length, st.head) :: rleDirect(rest)
       }
-    }.reverse
+    }
+    def duplicate[A](ls: List[A]): List[A] = ls match {
+      case Nil => Nil
+      case h :: tail => h :: h :: duplicate(tail)
+    }
+    def duplicateN[A](n: Int, ls: List[A]): List[A] = ls.map({ h => List.fill(n)(h) }).flatten 
   }
 }
