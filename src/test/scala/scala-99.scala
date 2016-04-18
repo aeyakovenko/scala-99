@@ -83,4 +83,13 @@ object Scala99Test extends Properties("scala99") {
     val b = Scala99.compress(a)
     Scala99.rle(Scala99.duplicateN(t, b)) == List.fill(b.length)(t).zip(b) 
   }
+  property("dropNth") = forAll { (a: List[Int]) => 
+    Scala99.dropNth(1, a) == Nil &&
+    Scala99.dropNth(2, List(1,2,3)) == List(1,3) &&
+    Scala99.dropNth(3, List(1,2,3,4,5,6,7,8,9,0)) == List(1,2,4,5,7,8,0)
+  }
+  property("split") = forAll { (n: Int, a: List[Int]) => 
+    val (f,s) = Scala99.split(n, a)
+    f ++ s == a && (n < 0 || a.length < n || f.length == n)
+  }
 }

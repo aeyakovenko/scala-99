@@ -45,6 +45,7 @@ package scala99 {
       val f = (a: Int, b: A) => List.fill(a)(b)
       ls.map(f.tupled).flatten
     }
+
     def rleDirect[A](ls: List[A]): List[(Int,A)] = ls match {
       case Nil => Nil
       case ls => {
@@ -58,5 +59,15 @@ package scala99 {
       case h :: tail => h :: h :: duplicate(tail)
     }
     def duplicateN[A](n: Int, ls: List[A]): List[A] = ls.map({ h => List.fill(n)(h) }).flatten 
+    def groupByN[A](n: Int, ls: List[A]): List[List[A]] = ls match {
+      case Nil => Nil
+      case ls => { 
+        val s = ls.take(n)
+        val r = ls.drop(n)
+        s :: groupByN(n, r) 
+      }
+    }
+    def dropNth[A](n: Int, ls: List[A]): List[A] = groupByN(n, ls).map(_.take(n - 1)).flatten
+    def split[A](n: Int, ls: List[A]): (List[A],List[A]) = (ls.take(n), ls.drop(n))
   }
 }
