@@ -67,7 +67,15 @@ package scala99 {
         s :: groupByN(n, r) 
       }
     }
-    def dropNth[A](n: Int, ls: List[A]): List[A] = groupByN(n, ls).map(_.take(n - 1)).flatten
+    def dropNth[A](n: Int, ls: List[A]): List[A] =
+      groupByN(n, ls).map(_.take(n - 1)).flatten
     def split[A](n: Int, ls: List[A]): (List[A],List[A]) = (ls.take(n), ls.drop(n))
+    def slice[A](j: Int, k: Int, ls: List[A]): (List[A],List[A],List[A]) =
+      (ls.take(j), ls.drop(j).take(k - j), ls.drop(k))
+    def rotate[A](n: Int, ls: List[A]): List[A] = (n,ls) match {
+      case (_,Nil)  => Nil
+      case (0,ls)   => ls
+      case (n,ls)   => (ls ++ ls).drop((ls.length + (n % ls.length)) % ls.length).take(ls.length)
+    }
   }
 }

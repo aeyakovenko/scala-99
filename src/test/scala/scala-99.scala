@@ -1,3 +1,4 @@
+import org.scalacheck._
 import org.scalacheck.Properties
 import org.scalacheck.Prop.forAll
 import scala.util.{Try,Success,Failure}
@@ -88,8 +89,37 @@ object Scala99Test extends Properties("scala99") {
     Scala99.dropNth(2, List(1,2,3)) == List(1,3) &&
     Scala99.dropNth(3, List(1,2,3,4,5,6,7,8,9,0)) == List(1,2,4,5,7,8,0)
   }
-  property("split") = forAll { (n: Int, a: List[Int]) => 
+
+  val splits: Gen[(Int,List[Int])] = for {
+    a <- Gen.listOf(Gen.choose(-100,100))
+    n <- Gen.choose(0, a.length + 1)
+  } yield (n,a)
+
+  property("split") = forAll(splits) { g  => 
+    val (n, a) = g
     val (f,s) = Scala99.split(n, a)
-    f ++ s == a && (n < 0 || a.length < n || f.length == n)
+    f ++ s == a && (a.length < n || f.length == n)
+  }
+
+  val slices: Gen[(Int,Int,List[Int])] = for {
+    a <- Gen.listOf(Gen.choose(-100,100))
+    j <- Gen.choose(0, a.length)
+    k <- Gen.choose(j, a.length)
+    n = (j,k,a)
+  } yield n
+
+  property("slice") = forAll(slices) { g => 
+    val (j,k,a) = g 
+    val (p,s,e) = Scala99.slice(j, k, a)
+    (p ++ s ++ e == a) && (s.length == (k - j))
+  }
+
+  property("rotate") = forAll { (n: Int, a: List[Int]) => 
+    (n,a) match {
+      case (0,_)          => Scala99.rotate(n, a) == a
+      case (_,Nil)        => Scala99.rotate(n, a) == a
+      case (n,a) if n > 0 => a.drop(n % a.length).head == Scala99.rotate(n, a).head
+      case _              => a.drop(((n % a.length) + a.length) % a.length).head == Scala99.rotate(n, a).head
+    }
   }
 }
