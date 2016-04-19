@@ -78,10 +78,15 @@ package scala99 {
       case (n,ls)   => (ls ++ ls).drop((ls.length + (n % ls.length)) % ls.length).take(ls.length)
     }
     def deleteAt[A](n: Int, ls: List[A]): List[A] = (n,ls) match {
-      case (_, Nil) => Nil
+      case (_, Nil) => throw new IndexOutOfBoundsException
       case (0, ls) => ls.tail
       case (n, h :: tail) => h :: deleteAt(n - 1, tail)
     }
     def removeAt[A](n: Int, ls: List[A]): (List[A],A) = (deleteAt(n, ls), nth(n, ls))
+    def insertAt[A](n: Int, e: A, ls: List[A]): List[A] = (n,ls) match {
+      case (0, ls) => e :: ls
+      case (_, Nil) => throw new IndexOutOfBoundsException 
+      case (n, h :: tail) => h :: insertAt(n - 1, e, tail)
+    }
   }
 }

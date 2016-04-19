@@ -132,4 +132,14 @@ object Scala99Test extends Properties("scala99") {
       case _ => false
     }
   }
+  property("insertAt") = forAll { (n: Int, a: List[Int]) =>
+    val x = Try(Scala99.insertAt(n, 1, a))
+    val y = Try(a.take(n) ++ List(1) ++ a.drop(n))
+    (x,y) match {
+      case (Success(x),Success(y)) => x == y
+      case (Failure(_),Failure(_)) => true
+      case (Failure(_),Success(_)) if (n < 0 || n > a.length) => true
+      case _ => false
+    }
+  }
 }
