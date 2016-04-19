@@ -77,5 +77,11 @@ package scala99 {
       case (0,ls)   => ls
       case (n,ls)   => (ls ++ ls).drop((ls.length + (n % ls.length)) % ls.length).take(ls.length)
     }
+    def deleteAt[A](n: Int, ls: List[A]): List[A] = (n,ls) match {
+      case (_, Nil) => Nil
+      case (0, ls) => ls.tail
+      case (n, h :: tail) => h :: deleteAt(n - 1, tail)
+    }
+    def removeAt[A](n: Int, ls: List[A]): (List[A],A) = (deleteAt(n, ls), nth(n, ls))
   }
 }

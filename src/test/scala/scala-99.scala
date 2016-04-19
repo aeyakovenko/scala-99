@@ -122,4 +122,14 @@ object Scala99Test extends Properties("scala99") {
       case _              => a.drop(((n % a.length) + a.length) % a.length).head == Scala99.rotate(n, a).head
     }
   }
+  property("removeAt") = forAll { (n: Int, a: List[Int]) =>
+    val x = Try(Scala99.removeAt(n, a))
+    val y = Try(a.apply(n))
+    (x,y) match {
+      case (Success((r,e)),Success(v)) if n == 0 => v == e && r.drop(n) == a.drop(n + 1)
+      case (Success((r,e)),Success(v)) => v == e && r.drop(n) == a.drop(n+1) && r.take(n-1) == a.take(n-1)
+      case (Failure(_),Failure(_)) => true
+      case _ => false
+    }
+  }
 }
