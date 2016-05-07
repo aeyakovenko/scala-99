@@ -142,4 +142,15 @@ object Scala99Test extends Properties("scala99") {
       case _ => false
     }
   }
+
+  val ranges: Gen[(Int,Int)] = for {
+    a <- Gen.choose(-100,100);
+    b <- Gen.choose(-100,100);
+    g = (a,b)
+  } yield g
+
+  property("range") = forAll(ranges) { g =>
+    val (st,en) = g
+    (st to en toList) == Scala99.range(st,en)
+  }
 }

@@ -88,5 +88,9 @@ package scala99 {
       case (_, Nil) => throw new IndexOutOfBoundsException 
       case (n, h :: tail) => h :: insertAt(n - 1, e, tail)
     }
+    def range[A](s: A, e: A)(implicit num:Numeric[A]): List[A] = (num.compare(s, e) > 0) match {
+      case false => s :: range(num.plus(s,num.one), e)
+      case _ => Nil
+    }
   }
 }
